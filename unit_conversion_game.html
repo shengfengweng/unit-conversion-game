@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重量單位轉換遊戲</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .score-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .question-area {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #2196f3;
+        }
+
+        .question {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-area {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #answer {
+            padding: 12px 20px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            width: 150px;
+            text-align: center;
+        }
+
+        #answer:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.3);
+        }
+
+        .unit-label {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .submit-btn {
+            background: #4caf50;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            background: #2196f3;
+            color: white;
+        }
+
+        .next-btn:hover {
+            background: #1976d2;
+            transform: translateY(-2px);
+        }
+
+        .restart-btn {
+            background: #ff9800;
+            color: white;
+        }
+
+        .restart-btn:hover {
+            background: #f57c00;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .conversion-hint {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .category-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            border-left: 5px solid #4caf50;
+        }
+
+        .category-selector label {
+            font-weight: bold;
+            color: #333;
+            margin-right: 10px;
+        }
+
+        .category-selector select {
+            padding: 8px 15px;
+            font-size: 1em;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .category-selector select:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>📏 單位轉換大挑戰</h1>
+        <p class="subtitle">練習重量、長度、面積、體積單位轉換</p>
+
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-label">正確答案</div>
+                <div class="score-value" id="correct-count">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">總題數</div>
+                <div class="score-value" id="total-count">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">正確率</div>
+                <div class="score-value" id="accuracy">0%</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <div class="category-selector">
+            <label for="category">選擇轉換類型：</label>
+            <select id="category" onchange="changeCategory()">
+                <option value="weight">重量單位</option>
+                <option value="length">長度單位</option>
+                <option value="area">面積單位</option>
+                <option value="volume">體積單位</option>
+            </select>
+        </div>
+
+        <div class="conversion-hint" id="conversion-hint">
+            💡 提示：1公噸 = 1000公斤 = 1,000,000公克
+        </div>
+
+        <div class="question-area">
+            <div class="question" id="question">載入題目中...</div>
+            <div class="input-area">
+                <input type="number" id="answer" placeholder="輸入答案" step="any">
+                <span class="unit-label" id="target-unit"></span>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="submit-btn" id="submit-btn" onclick="checkAnswer()">提交答案</button>
+            <button class="next-btn hidden" id="next-btn" onclick="nextQuestion()">下一題</button>
+            <button class="restart-btn" onclick="restartGame()">重新開始</button>
+        </div>
+
+        <div class="feedback hidden" id="feedback"></div>
+    </div>
+
+    <script>
+        // 遊戲狀態
+        let currentQuestion = {};
+        let correctCount = 0;
+        let totalCount = 0;
+        let questionsPerRound = 10;
+        let currentCategory = 'weight';
+
+        // 所有單位轉換關係
+        const unitCategories = {
+            weight: {
+                name: '重量單位',
+                hint: '💡 提示：1公噸 = 1000公斤 = 1,000,000公克',
+                units: {
+                    '公噸': { name: '公噸', symbol: 't', baseValue: 1000000 },
+                    '公斤': { name: '公斤', symbol: 'kg', baseValue: 1000 },
+                    '公克': { name: '公克', symbol: 'g', baseValue: 1 }
+                }
+            },
+            length: {
+                name: '長度單位',
+                hint: '📏 提示：1公里 = 1000公尺 = 100,000公分 = 1,000,000公釐',
+                units: {
+                    '公里': { name: '公里', symbol: 'km', baseValue: 1000000 },
+                    '公尺': { name: '公尺', symbol: 'm', baseValue: 1000 },
+                    '公分': { name: '公分', symbol: 'cm', baseValue: 10 },
+                    '公釐': { name: '公釐', symbol: 'mm', baseValue: 1 }
+                }
+            },
+            area: {
+                name: '面積單位',
+                hint: '📐 提示：1平方公里 = 100公頃 = 1,000,000平方公尺',
+                units: {
+                    '平方公里': { name: '平方公里', symbol: 'km²', baseValue: 1000000 },
+                    '公頃': { name: '公頃', symbol: 'ha', baseValue: 10000 },
+                    '平方公尺': { name: '平方公尺', symbol: 'm²', baseValue: 1 },
+                    '平方公分': { name: '平方公分', symbol: 'cm²', baseValue: 0.0001 }
+                }
+            },
+            volume: {
+                name: '體積單位',
+                hint: '🧊 提示：1立方公尺 = 1000公升 = 1,000,000立方公分',
+                units: {
+                    '立方公尺': { name: '立方公尺', symbol: 'm³', baseValue: 1000000 },
+                    '公升': { name: '公升', symbol: 'L', baseValue: 1000 },
+                    '毫升': { name: '毫升', symbol: 'mL', baseValue: 1 },
+                    '立方公分': { name: '立方公分', symbol: 'cm³', baseValue: 1 }
+                }
+            }
+        };
+
+        // 改變類別
+        function changeCategory() {
+            currentCategory = document.getElementById('category').value;
+            document.getElementById('conversion-hint').textContent = unitCategories[currentCategory].hint;
+            restartGame();
+        }
+
+        // 生成隨機題目
+        function generateQuestion() {
+            const currentUnits = unitCategories[currentCategory].units;
+            const unitNames = Object.keys(currentUnits);
+            const fromUnit = unitNames[Math.floor(Math.random() * unitNames.length)];
+            let toUnit = unitNames[Math.floor(Math.random() * unitNames.length)];
+
+            // 確保轉換的單位不同
+            while (toUnit === fromUnit) {
+                toUnit = unitNames[Math.floor(Math.random() * unitNames.length)];
+            }
+
+            // 根據不同類別生成合適的數值
+            let value = generateValueForCategory(currentCategory, fromUnit);
+
+            // 計算正確答案
+            const fromBase = parseFloat(value) * currentUnits[fromUnit].baseValue;
+            const correctAnswer = fromBase / currentUnits[toUnit].baseValue;
+
+            return {
+                value: parseFloat(value),
+                fromUnit: fromUnit,
+                toUnit: toUnit,
+                correctAnswer: correctAnswer
+            };
+        }
+
+        // 根據類別生成合適的數值
+        function generateValueForCategory(category, unit) {
+            switch(category) {
+                case 'weight':
+                    if (unit === '公噸') return (Math.random() * 10 + 0.1).toFixed(1);
+                    if (unit === '公斤') return Math.floor(Math.random() * 1000 + 1);
+                    return Math.floor(Math.random() * 10000 + 100);
+
+                case 'length':
+                    if (unit === '公里') return (Math.random() * 10 + 0.1).toFixed(1);
+                    if (unit === '公尺') return Math.floor(Math.random() * 1000 + 1);
+                    if (unit === '公分') return Math.floor(Math.random() * 10000 + 10);
+                    return Math.floor(Math.random() * 100000 + 100);
+
+                case 'area':
+                    if (unit === '平方公里') return (Math.random() * 5 + 0.1).toFixed(2);
+                    if (unit === '公頃') return Math.floor(Math.random() * 100 + 1);
+                    if (unit === '平方公尺') return Math.floor(Math.random() * 10000 + 1);
+                    return Math.floor(Math.random() * 100000 + 100);
+
+                case 'volume':
+                    if (unit === '立方公尺') return (Math.random() * 10 + 0.1).toFixed(1);
+                    if (unit === '公升') return Math.floor(Math.random() * 1000 + 1);
+                    return Math.floor(Math.random() * 10000 + 100);
+
+                default:
+                    return Math.floor(Math.random() * 100 + 1);
+            }
+        }
+
+        // 顯示新題目
+        function showQuestion() {
+            currentQuestion = generateQuestion();
+            const questionText = `${currentQuestion.value} ${currentQuestion.fromUnit} = ? ${currentQuestion.toUnit}`;
+
+            document.getElementById('question').textContent = questionText;
+            document.getElementById('target-unit').textContent = currentQuestion.toUnit;
+            document.getElementById('answer').value = '';
+            document.getElementById('answer').focus();
+
+            // 隱藏反饋和下一題按鈕
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('submit-btn').classList.remove('hidden');
+        }
+
+        // 檢查答案
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answer').value);
+            const feedback = document.getElementById('feedback');
+
+            if (isNaN(userAnswer)) {
+                alert('請輸入有效的數字！');
+                return;
+            }
+
+            totalCount++;
+
+            // 根據答案大小調整容錯範圍
+            let tolerance;
+            if (currentQuestion.correctAnswer >= 1000) {
+                tolerance = Math.abs(currentQuestion.correctAnswer * 0.01); // 1% 容錯
+            } else if (currentQuestion.correctAnswer >= 1) {
+                tolerance = Math.abs(currentQuestion.correctAnswer * 0.005); // 0.5% 容錯
+            } else {
+                tolerance = Math.abs(currentQuestion.correctAnswer * 0.001); // 0.1% 容錯
+            }
+
+            const isCorrect = Math.abs(userAnswer - currentQuestion.correctAnswer) <= tolerance;
+
+            // 格式化顯示答案
+            let displayAnswer;
+            if (currentQuestion.correctAnswer >= 1000) {
+                displayAnswer = currentQuestion.correctAnswer.toLocaleString();
+            } else if (currentQuestion.correctAnswer < 1) {
+                displayAnswer = currentQuestion.correctAnswer.toFixed(6).replace(/\.?0+$/, '');
+            } else {
+                displayAnswer = currentQuestion.correctAnswer.toString();
+            }
+
+            if (isCorrect) {
+                correctCount++;
+                feedback.textContent = `🎉 正確！答案是 ${displayAnswer}`;
+                feedback.className = 'feedback correct';
+            } else {
+                feedback.textContent = `❌ 錯誤！正確答案是 ${displayAnswer}`;
+                feedback.className = 'feedback incorrect';
+            }
+
+            feedback.classList.remove('hidden');
+            document.getElementById('submit-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+
+            updateScore();
+            updateProgress();
+        }
+
+        // 更新分數
+        function updateScore() {
+            document.getElementById('correct-count').textContent = correctCount;
+            document.getElementById('total-count').textContent = totalCount;
+            const accuracy = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+
+        // 更新進度條
+        function updateProgress() {
+            const progress = (totalCount / questionsPerRound) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+
+            if (totalCount >= questionsPerRound) {
+                setTimeout(showFinalResult, 1000);
+            }
+        }
+
+        // 顯示最終結果
+        function showFinalResult() {
+            const accuracy = Math.round((correctCount / totalCount) * 100);
+            let message = `🎯 遊戲結束！\n\n`;
+            message += `總共答對：${correctCount}/${totalCount} 題\n`;
+            message += `正確率：${accuracy}%\n\n`;
+
+            if (accuracy >= 90) {
+                message += `🏆 太棒了！你是重量轉換大師！`;
+            } else if (accuracy >= 70) {
+                message += `👍 很好！繼續練習會更棒！`;
+            } else {
+                message += `💪 加油！多練習就會進步的！`;
+            }
+
+            alert(message);
+        }
+
+        // 下一題
+        function nextQuestion() {
+            if (totalCount < questionsPerRound) {
+                showQuestion();
+            }
+        }
+
+        // 重新開始遊戲
+        function restartGame() {
+            correctCount = 0;
+            totalCount = 0;
+            updateScore();
+            document.getElementById('progress-fill').style.width = '0%';
+            showQuestion();
+        }
+
+        // 鍵盤事件
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (!document.getElementById('submit-btn').classList.contains('hidden')) {
+                    checkAnswer();
+                } else if (!document.getElementById('next-btn').classList.contains('hidden')) {
+                    nextQuestion();
+                }
+            }
+        });
+
+        // 初始化遊戲
+        window.onload = function() {
+            showQuestion();
+        };
+    </script>
+</body>
+</html>
