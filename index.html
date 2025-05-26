@@ -3,47 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重量單位轉換遊戲</title>
+    <title>史弟夫數學</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             margin: 0;
-            padding: 20px;
-            min-height: 100vh;
+            padding: 10px;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
 
         .game-container {
             background: white;
             border-radius: 20px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             max-width: 600px;
             width: 100%;
+            max-height: 95vh;
             text-align: center;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         h1 {
             color: #333;
-            margin-bottom: 10px;
-            font-size: 2.5em;
+            margin: 0 0 5px 0;
+            font-size: 2.2em;
         }
 
         .subtitle {
             color: #666;
-            margin-bottom: 30px;
-            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-size: 1.1em;
         }
 
         .score-board {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             background: #f8f9fa;
-            padding: 15px;
+            padding: 10px;
             border-radius: 10px;
         }
 
@@ -65,16 +70,16 @@
 
         .question-area {
             background: #e3f2fd;
-            padding: 25px;
+            padding: 20px;
             border-radius: 15px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             border-left: 5px solid #2196f3;
         }
 
         .question {
-            font-size: 1.4em;
+            font-size: 1.3em;
             color: #333;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-weight: bold;
         }
 
@@ -83,7 +88,7 @@
             justify-content: center;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         #answer {
@@ -111,7 +116,7 @@
             display: flex;
             gap: 15px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         button {
@@ -155,10 +160,10 @@
         }
 
         .feedback {
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            margin-bottom: 10px;
+            font-size: 1em;
             font-weight: bold;
         }
 
@@ -177,17 +182,17 @@
         .conversion-hint {
             background: #fff3cd;
             color: #856404;
-            padding: 15px;
+            padding: 10px;
             border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
+            margin-bottom: 15px;
+            font-size: 0.85em;
         }
 
         .progress-bar {
             background: #e0e0e0;
-            height: 10px;
+            height: 8px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
@@ -202,8 +207,8 @@
         }
 
         .category-selector {
-            margin-bottom: 20px;
-            padding: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
             background: #f0f8ff;
             border-radius: 10px;
             border-left: 5px solid #4caf50;
@@ -232,8 +237,8 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>📏 單位轉換大挑戰</h1>
-        <p class="subtitle">練習重量、長度、面積、體積單位轉換</p>
+        <h1>🎓 史弟夫數學</h1>
+        <p class="subtitle">單位轉換練習 - 重量、長度、面積、體積</p>
 
         <div class="score-board">
             <div class="score-item">
